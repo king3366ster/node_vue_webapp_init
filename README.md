@@ -1,4 +1,4 @@
-# 网易云信web demo (html5) 简介
+# webapp demo html5 简介
 
 ## 工程初始化
 
