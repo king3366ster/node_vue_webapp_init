@@ -1,0 +1,81 @@
+/* 重置WEUI样式 */
+
+.g-window {
+  .weui-cells {
+    margin-top: 0;
+    background-color: transparent;
+  }
+  .weui-cell {
+    &:before {
+      /*left: 0;*/
+    }
+  }
+  /* 按钮组 */
+  .weui-btn {
+    &:after {
+      border: none;
+    }
+  }
+  .weui-btn_default {
+    color: $color_blue;
+  }
+  .weui-btn_transparent {
+    color: $color_white;
+    background-color: inherit;
+  }
+  .weui-btn_primary, .weui-btn_warn {
+    width: 90%;
+  }
+  .weui-btn_primary {
+    background-color: $color_blue;
+  }
+  .weui-btn_warn {
+    background-color: $color_red;
+  }
+  /* 输入框组 */
+  .weui-input {
+    font-size: 1rem;
+  }
+  .vux-input-icon {
+    /* 输入框提醒小图标 */
+    &.weui-icon-warn:before, &.weui-icon-success:before {
+      font-size: 1rem;
+    }
+  }
+  /* switch 元件 */
+  .weui-switch:checked, .weui-switch-cp__input:checked ~ .weui-switch-cp__box {
+    background-color: inherit;
+    border-color: inherit;
+  }
+  /* 导航元件 */
+  .vux-tab {
+    .vux-tab-item {
+      font-size: inherit;
+      & > a {
+        display: inline-block;
+        width: inherit;
+        height: inherit;
+      }
+      &.vux-tab-selected {
+        color: inherit;
+      }
+    }
+  }
+  .vux-button-group {
+    & > a.vux-button-group-current, & > a.hover, & > a:active {
+      background-color: inherit;
+    }
+  }
+  .vux-header {
+    .vux-header-title, h1 {
+      margin: 0 20%;
+      color: inherit;
+    }
+    .vux-header-left, .vux-header-right {
+      color: inherit;
+      a, button {
+        color: inherit;
+      }
+    }
+  }
+}

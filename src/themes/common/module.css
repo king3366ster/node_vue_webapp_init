@@ -1,0 +1,118 @@
+/*
+ * 模块
+ */
+
+/* 外面嵌套g-window 为了覆盖weui默认样式 */
+.g-window {
+  .m-main, .m-album, .m-article {
+    position: absolute;
+    padding-top: $height_nav;
+    display: block;
+    box-sizing: border-box;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    /* 控制元素在移动设备上是否使用滚动回弹效果 */
+    -webkit-overflow-scrolling: touch;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+  .m-article {
+    top: 0;
+  }
+  /* 用于左右留白布局 */
+  .m-cards {
+    position: relative;
+    display: block;
+    width: 90%; 
+    height: auto;
+    margin: 1rem auto;
+    z-index: 1;
+  }
+  .m-list {
+    position: absolute;
+    display: block;
+    box-sizing: border-box;
+    top: 0;
+    bottom: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    -webkit-overflow-scrolling: touch;
+    overflow-y: scroll;
+    overflow-x: hidden;
+  }
+  /* 二级页面的tab */
+  .m-tab {
+    position: fixed;
+    top: 0;
+    left: 0;
+    margin: 0;
+    padding: 10px 0;
+    width: 100%;
+    height: $height_tab;
+    overflow: hidden;
+    z-index: 3;
+    .vux-header-left, .vux-header-right {
+      top: 20px;
+    }
+    .m-tab-top {
+      position: relative;
+      padding: 0;
+      &.vux-button-group {
+        margin: 4px auto;
+      }
+    }
+    .m-tab-right {
+      position: absolute;
+      top: -10px;
+      right: 0;
+    }
+  }
+
+  /* 会话列表 */
+  .m-article-main, .m-chat-main {
+    position: relative;
+    display: block;
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+    -webkit-overflow-scrolling: touch;
+    overflow-y: scroll;
+    overflow-x: hidden;
+  }
+
+  /* 聊天页面 */
+  $height_editor: 4rem;
+  .m-chat-main {
+    /* 聊天页面有输入框 */
+    padding: 0 0 $height_editor 0;
+    /* 聊天历史记录没有输入框 */
+    &.m-chat-history {
+      padding-bottom: 0;
+    }
+    .m-chat-list {
+      position: relative;
+      display: block;
+      padding: 0 3%;
+      width: 94%;
+      height: 100%;
+    }
+  }
+  .m-chat-editor {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: $height_editor;
+  }
+  .m-login {
+    .u-card {
+      .weui-cells {
+        background-color: inherit;
+      }
+    }
+  }
+}

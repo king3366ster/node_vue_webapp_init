@@ -1,0 +1,147 @@
+/*
+* 元件
+*/
+
+/* 外面嵌套g-window 为了覆盖weui默认样式 */
+.g-window {
+
+  /* 白底输入框 */
+  .u-ipt-default {
+    color: $color_dark_gray;
+    input::placeholder {
+      color: $color_light_gray;
+    }
+  }
+  /* 透明底输入框 */
+  .u-ipt-transparent {
+    color: $color_white;
+    background-color: transparent;
+    input::placeholder {
+      color: $color_white;
+      opacity: 0.5;
+    }
+  }
+  /* 双选切换控件 */
+  .u-switch {
+    .weui-switch:checked, .weui-switch-cp__input:checked ~ .weui-switch-cp__box {
+      background-color: $color_blue;
+      border-color: $color_blue;
+    }
+  }
+  .u-card {
+    margin: 1rem 0;
+    .weui-cells {
+      background-color: #fff;
+    }
+  }
+  /* 列表 */
+  .u-list {
+    width: 100%;
+  }
+  .u-list-item {
+    min-height: 2rem;
+    vertical-align: middle;
+  }
+  /* 会话删除tag */
+  .u-tag-del {
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 24%;
+    height: 100%;
+    text-align: center;
+    color: $color_white;
+    background-color: $color_red;
+    transition: all 0.5s;
+    transform: translate3d(100%, 0, 0);
+    &::after {
+      position: relative;
+      content: "删除";
+      font-size: 1rem;
+      top: 32%;
+      margin-top: -0.5rem;
+    }
+    &.active {
+      transform: translate3d(0, 0, 0);
+    }
+  }
+  /* 消息记录 */
+  .u-msg {
+    position: relative;
+    padding: 0.4rem 0;
+    clear: both;
+    /* 用户头像 */
+    .msg-head {
+      position: relative;
+      display: inline-block;
+      top: 0.1rem;
+      margin: 0;
+      margin-right: 0.6rem;
+      margin-left: 0.6rem;
+      padding: 0;
+      width: 2rem;
+      height: 2rem;
+      vertical-align: top;
+      img {
+        position: relative;
+        display: inline-block;
+        margin: 0;
+        width: inherit;
+        height: inherit;
+      }
+    }
+    .msg-text {
+      position: relative;
+      padding: 0.4rem;
+      font-size: 1rem;
+      border-radius: 0.4rem;
+      border: none;
+      &::before, &::after {
+        content:' ';
+        position: absolute;
+        top: 0.8rem;
+        border-top: 0.4rem solid transparent;
+        border-bottom: 0.4rem solid transparent;
+        width: 0;
+        height: 0;
+      }
+    }
+    &.item-you {
+      .msg-head, .msg-text {
+        float: left;
+      }
+      .msg-text {
+        background-color: $msg_bg_you;
+        color: $msg_tx_you;
+        &::before {
+          right: 99%;
+          border-right: 0.4rem solid $msg_bg_you;
+        }
+        &::after {
+          background: none;
+        }
+      }
+    }
+    &.item-me {
+      .msg-head, .msg-text {
+        float: right;
+      }
+      .msg-text {
+        color: $msg_tx_me;
+        background-color: $msg_bg_me;
+        &::before {
+          background: none;
+        }
+        &::after {
+          left: 99%;
+          border-left: 0.4rem solid $msg_bg_me;
+        }
+      }
+    }
+    &.item-time {
+      font-size: 0.8rem;
+      text-align: center;
+      color: $color_gray;
+    }
+  }
+}
