@@ -1,16 +1,16 @@
 {
-  "name": "WEB_APP_HTML5_DEMO",
+  "name": "NIM_WEB_HTML5_DEMO",
   "version": "1.0.0",
-  "description": "Web APP Html5 Demo",
+  "description": "Web SDK Html5 Demo",
   "main": "index.js",
   "scripts": {
-    "start": "run-p -lns server dev",
+    "start": "run-p -lns dev server",
     "server": "node server",
     "clean": "run-p -lns clean:*",
     "clean:css": "rimraf dist/css",
     "clean:js": "rimraf dist/js",
     "build": "run-p -lns build:*",
-    "build:css": "postcss ./src/themes/**/*.css -c build/postcss.config.js -d ./dist/css --poll --watch",
+    "build:css": "postcss ./src/themes/**/*.css ./src/themes/*.css -c build/postcss.config.js -d ./dist/css --poll --watch",
     "build:js": "node build/build.webpack.js",
     "dev": "run-s -lns clean build"
   },
@@ -19,7 +19,7 @@
     "postcss",
     "webpack"
   ],
-  "author": "king3366ster",
+  "author": "netease",
   "license": "ISC",
   "dependencies": {
     "ajv": "^4.11.5",
@@ -61,7 +61,9 @@
     "webpack": "^2.2.1"
   },
   "devDependencies": {
-    "connect": "^3.6.0",
-    "serve-static": "^1.12.1"
+    "body-parser": "^1.17.1",
+    "cookie-parser": "^1.4.3",
+    "ejs": "^2.5.6",
+    "express": "^4.15.2"
   }
 }

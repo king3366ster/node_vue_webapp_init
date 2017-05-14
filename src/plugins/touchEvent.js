@@ -19,7 +19,8 @@ TouchEventPlugin.install = function (Vue) {
     //传入的模式 hold swiperight swipeleft swipetop swipedown tap
     bind: function (el, binding, vnode) {
       // Vue 编译生成的虚拟节点
-      vnode = (vnode && vnode.data && vnode.data.attrs) || {}
+      // vnode = (vnode && vnode.data && vnode.data.attrs) || {}
+      vnode = vnode || {}
       // 传给指令的参数。例如 v-touch:swipeRight, arg 的值是 "swipeRight"
       let touchType = binding.arg.toLowerCase()
       var timeOutEvent = 0
@@ -61,7 +62,6 @@ TouchEventPlugin.install = function (Vue) {
       el.addEventListener('touchstart', function (ev) {
         startX = ev.touches[0].pageX
         startY = ev.touches[0].pageY
-
           //判断长按
         timeOutEvent = setTimeout(() => {
           timeOutEvent = 0 
@@ -69,7 +69,6 @@ TouchEventPlugin.install = function (Vue) {
             binding.value(vnode)
           }
         } , 800)
-
       }, false)
 
       el.addEventListener('touchmove' , function (ev) {
@@ -80,41 +79,40 @@ TouchEventPlugin.install = function (Vue) {
       })
 
       el.addEventListener('touchend', function (ev) {
-        let endX = ev.changedTouches[0].pageX
-        let endY = ev.changedTouches[0].pageY
-        direction = GetSlideDirection(startX, startY, endX, endY)
         if (timeOutEvent) {
           clearTimeout(timeOutEvent)
           timeOutEvent = 0
         }
-
+        let endX = ev.changedTouches[0].pageX
+        let endY = ev.changedTouches[0].pageY
+        direction = GetSlideDirection(startX, startY, endX, endY)
         switch (direction) {
           case 0:
-              break
+            if (touchType === 'tap'){
+              binding.value(vnode)
+            }
+            break
           case 'swipeup':
             if (touchType === 'swipeup'){
-                binding.value(vnode)
+              binding.value(vnode)
             }
             break
           case 'swipedown':
             if (touchType === 'swipedown'){
-                binding.value(vnode)
+              binding.value(vnode)
             }
             break
           case 'swipeleft':
             if (touchType === 'swipeleft'){
-                binding.value(vnode)
+              binding.value(vnode)
             }
             break
           case 'swiperight':
             if (touchType === 'swiperight'){
-                binding.value(vnode)
+              binding.value(vnode)
             }
             break
           default:
-            if (touchType === 'tap'){
-                binding.value(vnode)
-            }
             break
         }
       }, false)

@@ -13,6 +13,8 @@ $color_black: #333;
 /* 顶部导航高度 */
 $height_nav: 3.6rem;
 $height_tab: 3.6rem;
+$height_room_banner: 12rem;
+$height_room_tabs: 3rem;
 
 /* 消息变量 */
 $msg_bg_you: #5cacde;

@@ -1,17 +1,20 @@
 <template>
   <div class="g-window">
     <nav-bar v-show="showNav"></nav-bar>
-    <loading :show="isLoading" position="absolute"></loading>
     <!-- 切页动画设置 -->
     <transition name="slide">
       <router-view></router-view>
     </transition>
+    <fullscreen-img></fullscreen-img>
+    <loading></loading>
   </div>
 </template>
 
 <script>
 import Vue from 'vue'
-import {Group, Cell, XHeader, XInput, XButton, XSwitch, Datetime, Loading, ViewBox, ButtonTab, ButtonTabItem, Flexbox, FlexboxItem, Divider} from 'vux'
+import {Group, Cell, XHeader, XInput, XButton, XSwitch, Datetime, ViewBox, Search, ButtonTab, ButtonTabItem, Flexbox, FlexboxItem, Divider} from 'vux'
+import Loading from './pages/components/Loading'
+import FullscreenImg from './pages/components/FullscreenImg'
 
 // 全局注册vux的组件
 Vue.component('Group', Group)
@@ -22,20 +25,30 @@ Vue.component('ButtonTabItem', ButtonTabItem)
 Vue.component('Flexbox', Flexbox)
 Vue.component('FlexboxItem', FlexboxItem)
 Vue.component('Divider', Divider)
+Vue.component('Search', Search)
 Vue.component('XInput', XInput)
 Vue.component('XButton', XButton)
 Vue.component('XHeader', XHeader)
 Vue.component('XSwitch', XSwitch)
 
-import NavBar from './components/NavBar'
+import NavBar from './pages/components/NavBar'
+import cookie from './utils/cookie'
 
 export default {
+  // 所有页面更新都会触发此函数
+  updated () {
+    // 提交sdk连接请求
+    this.$store.dispatch('connect')
+    this.$store.dispatch('updateRefreshState')
+  },
   components: {
     NavBar,
     ViewBox,
-    Loading
+    Loading,
+    FullscreenImg
   },
   computed: {
+    // 是否显示导航条
     showNav () {
       const path = this.$route.path
       switch (path) {
@@ -45,18 +58,13 @@ export default {
           return true
         case '/contacts':
           return true
-        case '/live':
+        case '/room':
           return true
         case '/general':
           return true
         default:
           return false
       }
-    }
-  },
-  data () {
-    return {
-      isLoading: false
     }
   }
 }

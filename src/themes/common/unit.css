@@ -33,6 +33,20 @@
     .weui-cells {
       background-color: #fff;
     }
+    .icon {
+      display: inline-block;
+      margin-right: 0.8rem;
+      width: 2rem;
+      height: 2rem;
+    }
+  }
+  .u-search {
+    margin: 0;
+    margin-bottom: 2rem;
+    height: 2rem;
+    .weui-cells:after, .weui-cells:before {
+      border-color: #f0f0f0;
+    }
   }
   /* 列表 */
   .u-list {
@@ -41,6 +55,12 @@
   .u-list-item {
     min-height: 2rem;
     vertical-align: middle;
+    .icon {
+      display: inline-block;
+      margin-right: 0.6rem;
+      width: 2rem;
+      height: 2rem;
+    }
   }
   /* 会话删除tag */
   .u-tag-del {
@@ -65,11 +85,30 @@
       transform: translate3d(0, 0, 0);
     }
   }
+  /* 未读数标签 */
+  .u-unread {
+    display: inline-block;
+    position: absolute;
+    right: 0.4rem;
+    top: 0.4rem;
+    padding: 2px;
+    min-width: 1rem;
+    min-height: 1rem;
+    line-height: 1rem;
+    font-size: 12px;
+    background-color: #f00;
+    color: #fff;
+    text-align: center;
+    border-radius: 0.8rem;
+  }
   /* 消息记录 */
   .u-msg {
     position: relative;
-    padding: 0.4rem 0;
-    clear: both;
+    padding: 0.2rem 0;
+    &.session-chat {
+      padding: 0.6rem 0;
+      clear: both;
+    }
     /* 用户头像 */
     .msg-head {
       position: relative;
@@ -90,12 +129,56 @@
         height: inherit;
       }
     }
+    .msg-user {
+      font-style: italic;
+      color: #999;
+      em {
+        font-weight: normal;
+        margin-right: 1rem;
+      }
+    }
     .msg-text {
       position: relative;
-      padding: 0.4rem;
-      font-size: 1rem;
-      border-radius: 0.4rem;
+      display: inline-block;
+      max-width: 54%;
+      min-height: 1.2rem;
+      height: auto;
+      line-height: 1.2rem;
+      font-size: 1.0rem;
       border: none;
+      img {
+        position: relative;
+        display: inline-block;
+        margin: 0;
+        padding: 0;
+        max-width: 100%;
+        vertical-align: bottom;
+        &.emoji-small {
+          width: 1.4rem;
+          height: 1.4rem;
+          vertical-align: bottom;
+        }
+        &.emoji-big {
+          width: 3rem;
+          height: 3rem;
+          vertical-align: middle;
+        }
+        &.emoji-big {
+          width: 4.8rem;
+          height: 4.8rem;
+          vertical-align: middle;
+        }
+      }
+      embed, video {
+        position: relative;
+        display: inline-block;
+        max-width: 100%;
+        max-height: 8rem;
+        vertical-align: bottom;
+        background-color: #000;
+        text-align: center;
+        color: #fff;
+      }
       &::before, &::after {
         content:' ';
         position: absolute;
@@ -106,7 +189,20 @@
         height: 0;
       }
     }
-    &.item-you {
+    .msg-failed {
+      position: relative;
+      float: right;
+      margin-right: 0.2rem;
+      vertical-align: top;
+      font-size: 0.92rem;
+      line-height: 2.0rem;
+    }
+    &.session-chat .msg-text {
+      padding: 0.4rem;
+      margin-bottom: 0.8rem;
+      border-radius: 0.4rem;
+    }
+    &.session-chat.item-you {
       .msg-head, .msg-text {
         float: left;
       }
@@ -122,7 +218,7 @@
         }
       }
     }
-    &.item-me {
+    &.session-chat.item-me {
       .msg-head, .msg-text {
         float: right;
       }
@@ -143,5 +239,37 @@
       text-align: center;
       color: $color_gray;
     }
+    .notify {
+      color: #f50;
+      font-size: 0.8rem;
+    }
+  }
+  .u-error {
+    color: $color_red;
+  }
+  .u-icon, .u-icon-2 {
+    display: inline-block;
+    width: inherit;
+    height: inherit;
+    &.icon-emoji {
+      background-position: 0 -11.9rem;
+    }
+    &.icon-file {
+      background-position: -7.6rem -7rem;
+    }
+    &.icon-image {
+      background-position: 0 -4.8rem;
+    }
+    &.icon-play {
+      background-position: -2.3rem -1.9rem;
+    }
+  }
+  .u-icon {
+    background-size: 20rem;
+    background-image: url(/res/im/icons.png);
+  }
+  .u-icon-2 {
+    background-size: 5.8rem;
+    background-image: url(/res/im/icons-2.png);
   }
 }

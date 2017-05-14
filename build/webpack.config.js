@@ -15,7 +15,9 @@ let webpackConfig = {
   context: projectRoot,
   //页面入口文件配置
   entry: {
-    app: './src/main.js'
+    main: './src/main.js',
+    login: './src/login.js',
+    regist: './src/regist.js'
   },
   //入口文件输出配置
   output: {
@@ -89,6 +91,10 @@ let webpackConfig = {
     ]
   },
   plugins: [
+    // 全局挂载插件
+    new webpack.ProvidePlugin({
+    }),
+    // 压缩JS
     // new webpack.optimize.UglifyJsPlugin({
     //   compress: {
     //       warnings: false
@@ -104,10 +110,6 @@ let webpackConfig = {
 webpackConfig = vuxLoader.merge(webpackConfig, {
   plugins: [
     'vux-ui',
-    // {
-    //   name: 'less-theme',
-    //   path: 'src/themes/theme.less'
-    // },
     'progress-bar',
     'duplicate-style'
   ]

@@ -1,4 +1,4 @@
-# webapp demo html5 简介
+# web demo (html5) 简介
 
 ## 工程初始化
 
@@ -23,6 +23,13 @@
 		<!-- 192.168.0.146 为举例，填写开发者的局域网IP地址 --> 
 		<script src="http://192.168.0.146:8081/target/target-script-min.js#anonymous"></script>
 		```
-	- 手机访问，例如输入网址： http://192.168.0.146:2001 即可真机调试
-		- 注意：此网址为工程web服务地址，而不是weinre起得服务的地址
+	- 手机访问，例如：http://192.168.0.146:2001网址即可真机调试(此网址为工程web服务地址)
 	- [参考资料](https://www.npmjs.com/package/weinre)
+
+
+- src js 需要在webpack中增加配置页面
+
+### 开发调试
+- 推荐使用chrome插件 Vue.js devtools
+	- https://github.com/vuejs/vue-devtools
+- 同时也开启了webpack sourcemap方便开发者调试

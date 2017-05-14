@@ -1,4 +1,4 @@
-## web app demo (html5) 二次开发指南
+## web demo (html5) 二次开发指南
 
 ### 工程结构
 触摸插件，vue-touch不支持vue 2.0 用plugins/touchEvent

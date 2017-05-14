@@ -4,7 +4,7 @@
 
 /* 外面嵌套g-window 为了覆盖weui默认样式 */
 .g-window {
-  .m-main, .m-album, .m-article {
+  .m-main, .m-album, .m-article, .m-room {
     position: absolute;
     padding-top: $height_nav;
     display: block;
@@ -21,6 +21,10 @@
   }
   .m-article {
     top: 0;
+  }
+  /* 直播页面 */
+  .m-room {
+    padding-top: 0;
   }
   /* 用于左右留白布局 */
   .m-cards {
@@ -46,7 +50,7 @@
   }
   /* 二级页面的tab */
   .m-tab {
-    position: fixed;
+    position: absolute;
     top: 0;
     left: 0;
     margin: 0;
@@ -67,8 +71,11 @@
     }
     .m-tab-right {
       position: absolute;
-      top: -10px;
       right: 0;
+      top: 0.1rem;
+      font-size: 0.8rem;
+      text-align: right;
+      width: 4rem;
     }
   }
 
@@ -79,9 +86,7 @@
     box-sizing: border-box;
     width: 100%;
     height: 100%;
-    -webkit-overflow-scrolling: touch;
-    overflow-y: scroll;
-    overflow-x: hidden;
+    overflow: hidden;
   }
 
   /* 聊天页面 */
@@ -96,23 +101,157 @@
     .m-chat-list {
       position: relative;
       display: block;
-      padding: 0 3%;
-      width: 94%;
+      box-sizing: border-box;
+      padding: 1rem 2%;
+      width: 100%;
       height: 100%;
+      -webkit-overflow-scrolling: touch;
+      overflow-y: scroll;
+      overflow-x: hidden;
     }
   }
   .m-chat-editor {
-    position: fixed;
+    position: absolute;
     bottom: 0;
     left: 0;
     width: 100%;
     height: $height_editor;
   }
+  /* 登录注册页面 */
   .m-login {
     .u-card {
       .weui-cells {
         background-color: inherit;
       }
     }
+  }
+
+/* 聊天室相关页面 */
+  /* 聊天室入口页面 */
+  .m-room-entry {
+    text-align: center;
+    .u-box {
+      position: relative;
+      display: inline-block;
+      margin: 0.5rem 0;
+      width: 50%;
+      min-height: 4rem;
+      text-align: center;
+      overflow: hidden;
+      .album, .desc {
+        position: relative;
+        display: block;
+        margin: 0 auto;
+        width: 90%;
+        box-sizing: border-box;
+        line-height: 1.6;
+        border: 1px solid #ccc;
+      }
+      .album {
+        position: relative;
+        height: 6.4rem;
+        font-size: 0.9rem;
+        overflow: hidden;
+        background-color: #000;
+        .pic {
+          position: absolute;
+          width: auto;
+          height: inherit;
+          left: 50%;
+          top: 50%;
+          transform: translate(-50%, -50%);
+        }
+        .status {
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          width: 100%;
+          height: 1.6rem;
+          line-height: 1.6rem;
+          text-align: left;
+          color: #333;
+          background-color: #fff;
+          opacity: 0.8;
+          strong {
+            margin-left: 0.4rem;
+          }
+          em {
+            margin-right: 0.4rem;
+            float: right;
+            color: inherit;
+          }
+        }
+      }
+      .desc {
+        margin-top: -1px;
+        text-align: left;
+        text-indent: 0.5rem;
+        line-height: 1.6rem;
+        min-height: 1.6rem;
+        color: #999;
+        background-color: #fff;
+      }
+    }
+  }
+  /* 聊天室内页 */
+  .m-room-album {
+    position: absolute;
+    display: block;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: $height_room_banner;
+    background-color: #000;
+    z-index: 2;
+    .img-wraper {
+      width: 50%;
+      margin-left: 50%;
+      height: inherit;
+    }
+    .room-img {
+      position: relative;
+      display: block;
+      height: inherit;
+      width: auto;
+      transform: translate(-50%, 0);
+    }
+  }
+  .m-room-tabs {
+    position: absolute;
+    top: $height_room_banner;
+    left: 0;
+    height: $height_room_tabs;
+    width: 100%;
+    z-index: 3;
+    .u-tab {
+      position: relative;
+      display: inline-block;
+      box-sizing: border-box;
+      width: 33.333%;
+      height: inherit;
+      line-height: $height_room_tabs;
+      text-align: center;
+      cursor: pointer;
+      &.active {
+        color: $color_blue;
+        border-bottom: $color_blue 0.4rem solid;
+      }
+    }
+  }
+  .m-room-container {
+    position: absolute;
+    display: block;
+    box-sizing: border-box;
+    top: 0;
+    left: 0;
+    padding-top: calc($height_room_banner + $height_room_tabs);
+    width: 100%;
+    height: 100%;
+  }
+  .room-cnt {
+    position: relative;
+    display: block;
+    height: 100%;
+    width: 100%;
   }
 }
