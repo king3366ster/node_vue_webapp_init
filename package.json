@@ -1,7 +1,7 @@
 {
-  "name": "NIM_WEB_HTML5_DEMO",
+  "name": "WEBAPP_HTML5_DEMO",
   "version": "1.0.0",
-  "description": "Web SDK Html5 Demo",
+  "description": "Web APP Html5 Demo",
   "main": "index.js",
   "scripts": {
     "start": "run-p -lns dev server",
