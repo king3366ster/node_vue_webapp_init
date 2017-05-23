@@ -14,16 +14,10 @@ export function onChatroomMsgs (msgs) {
   }
 }
 
-function onFailedChatroomMsg (msg) {
-  msg.failed = true
-  onChatroomMsgs([msg])
-}
-
 function onSendMsgDone (error, msg) {
   store.dispatch('hideLoading')
   if (error) {
-    alert(error)
-    onFailedMsg(msg)
+    alert(error.message)
     return
   }
   onChatroomMsgs([msg])
@@ -44,6 +38,7 @@ export function sendChatroomMsg ({state, commit}, obj) {
     case 'custom':
       chatroom.sendCustomMsg({
         content: JSON.stringify(obj.content),
+        pushContent: obj.pushContent,
         done: onSendMsgDone
       })
   }

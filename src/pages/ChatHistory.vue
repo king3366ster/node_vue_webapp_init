@@ -49,7 +49,7 @@ export default {
     return {
       leftBtnOptions: {
         backText: ' ',
-        preventGoBack: true, 
+        preventGoBack: true,
       },
       currPagePos: 0,
       // selectedDate: ''
@@ -64,8 +64,11 @@ export default {
       let user = null
       if (/^p2p-/.test(sessionId)) {
         user = sessionId.replace(/^p2p-/, '')
+        if (user === this.$store.state.userUID) {
+          return '我的手机'
+        }
         let userInfo = this.userInfos[user] || {}
-        return userInfo.alias || userInfo.nick || userInfo.account
+        return util.getFriendAlias(userInfo)  
       } else if (/^team-/.test(sessionId)) {
         return '群'
       }
@@ -105,7 +108,8 @@ export default {
       }
     },
     onClickBack: function () {
-      location.href = `#/chat/${this.sessionId}`
+      // location.href = `#/chat/${this.sessionId}`
+      window.history.go(-1)
     }
   }
 }

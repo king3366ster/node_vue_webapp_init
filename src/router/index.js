@@ -89,7 +89,7 @@ const routes = [
     path: '/searchuser/:searchType',
     name: 'searchuser',
     component (resolve) {
-      require(['../pages/searchUser'], resolve)
+      require(['../pages/SearchUser'], resolve)
     }
   },
   // 通用页面

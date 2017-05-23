@@ -56,18 +56,6 @@
       }
     },
     methods: {
-      recallMsg (vNode) {
-        if (this.$store.state.currSessionId) {
-          if (vNode && vNode.data && vNode.data.attrs) {
-            let attrs = vNode.data.attrs
-            if (attrs.flow === 'out') {
-              if (confirm('确定需要撤回消息')) {
-                alert('消息撤回Demo尚待开发,idClient:' + attrs.idClient)
-              }
-            }
-          }
-        }
-      },
       showFullImg (src) {
         this.$store.dispatch('showFullscreenImg', {
           src
@@ -77,7 +65,6 @@
         clearTimeout(this.msgLoadedTimer)
         this.msgLoadedTimer = setTimeout(() => {
           this.$emit('msgs-loaded')
-          this.msgLoadedTimer = null
         }, 20)
       }
     }

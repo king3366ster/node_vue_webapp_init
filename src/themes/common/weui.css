@@ -18,6 +18,7 @@
   }
   .weui-cell {
     font-size: 1.08rem;
+    padding: 0.5rem 0.7rem;
     .vux-label-desc {
       font-size: 0.8rem;
       color: #999;
@@ -34,7 +35,7 @@
     }
   }
   .weui-btn_default {
-    color: $color_blue;
+    color: $color_button_primary;
   }
   .weui-btn_transparent {
     color: $color_white;
@@ -44,10 +45,10 @@
     width: 90%;
   }
   .weui-btn_primary {
-    background-color: $color_blue;
+    background-color: $color_button_primary;
   }
   .weui-btn_warn {
-    background-color: $color_red;
+    background-color: $color_button_warn;
   }
   /* 输入框组 */
   .weui-input {

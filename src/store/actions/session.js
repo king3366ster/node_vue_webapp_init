@@ -16,7 +16,9 @@ function updateSessionAccount (sessions) {
     }
   })
   if (accountsNeedSearch.length > 0) {
-    store.dispatch('searchUsers', accountsNeedSearch)
+    store.dispatch('searchUsers', {
+      accounts: accountsNeedSearch
+    })
   }
 }
 

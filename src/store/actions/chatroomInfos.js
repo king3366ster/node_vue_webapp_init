@@ -9,12 +9,10 @@ export function initChatroomInfos ({state, commit}, obj) {
 export function getChatroomInfo ({state, commit, dispatch}) {
   const chatroom = state.currChatroom
   if (chatroom) {
-    dispatch('showLoading')
     chatroom.getChatroom({
       done: function getChatroomDone (error, info) {
         if (error) {
-          alert(error)
-          dispatch('hideLoading')
+          alert(error.message)
           return
         }
         info = info.chatroom || {creator: ''}
@@ -22,9 +20,8 @@ export function getChatroomInfo ({state, commit, dispatch}) {
         chatroom.getChatroomMembersInfo({
           accounts: [creator],
           done: function getChatroomMembersInfoDone (error, user) {
-            dispatch('hideLoading')
             if (error) {
-              alert(error)
+              alert(error.message)
               return
             }
             commit('getChatroomInfo', Object.assign(info,  {actor: user.members[0]}))
@@ -36,19 +33,28 @@ export function getChatroomInfo ({state, commit, dispatch}) {
 }
 
 export function getChatroomMembers ({state, commit, dispatch}) {
-  const chatroom = state.currChatroom
+  // 先拉管理员
+  getChatroomMembersLocal (false, function (obj) {
+    commit('updateChatroomMembers', Object.assign(obj, {type: 'put'}))
+    // 再拉成员列表
+    getChatroomMembersLocal (true, function (obj) {
+      commit('updateChatroomMembers', Object.assign(obj, {type: 'put'}))
+    })
+  })
+}
+
+function getChatroomMembersLocal (isGuest, callback) {
+  const chatroom = store.state.currChatroom
   if (chatroom) {
-    dispatch('showLoading')
     chatroom.getChatroomMembers({
-      guest: false,
+      guest: isGuest,
       limit: 100,
       done: function getChatroomMembersDone (error, obj) {
-        dispatch('hideLoading')
         if (error) {
-          alert(error)
+          alert(error.message)
           return
         }
-        commit('updateChatroomMembers', Object.assign(obj, {type: 'put'}))
+        callback(obj)
       }
     })
   }

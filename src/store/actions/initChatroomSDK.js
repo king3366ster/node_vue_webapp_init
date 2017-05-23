@@ -27,10 +27,11 @@ export function initChatroomSDK ({ state, commit, dispatch }, obj) {
           commit('setCurrChatroom', chatroomId)
         },
         onerror: function onChatroomError (error, obj) {
-          if (error) {
-            alert(error)
-          }
           dispatch('hideLoading')
+          if (error) {
+            alert('网络连接状态异常')
+            location.href='#/room'
+          }
         },
         onwillreconnect: function onChatroomWillReconnect (obj) {
           // 此时说明 `SDK` 已经断开连接, 请开发者在界面上提示用户连接已断开, 而且正在重新建立连接
@@ -38,6 +39,7 @@ export function initChatroomSDK ({ state, commit, dispatch }, obj) {
         },
         ondisconnect: function onChatroomDisconnect (error) {
           // 此时说明 `SDK` 处于断开状态, 切换聊天室也会触发次回调
+          dispatch('hideLoading')
           if (error) {
             switch (error.code) {
               // 账号或者密码错误, 请跳转到登录页面并提示错误
@@ -70,7 +72,7 @@ export function initChatroomSDK ({ state, commit, dispatch }, obj) {
       })
     }
   } else {
-    alert('no roomid or address')
+    alert('没有聊天室地址')
   }
 }
 

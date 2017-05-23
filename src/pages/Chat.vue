@@ -38,9 +38,13 @@ export default {
   },
   // 进入该页面，文档被挂载
   mounted () {
+    this.$store.dispatch('showLoading')
     // 此时设置当前会话
     this.$store.dispatch('setCurrSession', this.sessionId)
     pageUtil.scrollChatListDown()
+    setTimeout(() => {
+      this.$store.dispatch('hideLoading')
+    }, 1000)
   },
   updated () {
     pageUtil.scrollChatListDown()
@@ -53,7 +57,7 @@ export default {
     return {
       leftBtnOptions: {
         backText: ' ',
-        preventGoBack: true, 
+        preventGoBack: true,
       }
     }
   },
@@ -67,8 +71,11 @@ export default {
       let user = null
       if (/^p2p-/.test(sessionId)) {
         user = sessionId.replace(/^p2p-/, '')
+        if (user === this.$store.state.userUID) {
+          return '我的手机'
+        }
         let userInfo = this.userInfos[user] || {}
-        return userInfo.alias || userInfo.nick || userInfo.account
+        return util.getFriendAlias(userInfo)
       } else if (/^team-/.test(sessionId)) {
         return '群'
       }
@@ -92,7 +99,8 @@ export default {
   },
   methods: {
     onClickBack () {
-      location.href = '#/contacts'
+      // location.href = '#/contacts'
+      window.history.go(-1)
     },
     msgsLoaded () {
       pageUtil.scrollChatListDown()
@@ -100,6 +108,10 @@ export default {
     enterNameCard () {
       if (/^p2p-/.test(this.sessionId)) {
         let account = this.sessionId.replace(/^p2p-/, '')
+        if (account === this.$store.state.userUID) {
+          location.href = `#/general`
+          return
+        }
         location.href = `#/namecard/${account}`
       }
     }

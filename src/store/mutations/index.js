@@ -122,9 +122,10 @@ export default {
         state.msgs[sessionId] = []
       }
       // sdk会做消息去重
-      state.msgs[sessionId] = nim.mergeMsgs(state.msgs[sessionId], [msg]);
+      state.msgs[sessionId] = nim.mergeMsgs(state.msgs[sessionId], [msg])
       // state.msgs[sessionId].push(msg)
     })
+    store.commit('updateMsgByIdClient', msgs)
     for (let sessionId in tempSessionMap) {
       state.msgs[sessionId].sort((a, b) => {
         return a.time - b.time
@@ -142,8 +143,68 @@ export default {
     if (!state.msgs[sessionId]) {
       state.msgs[sessionId] = []
     }
-    state.msgs[sessionId].push(msg)
+    store.commit('updateMsgByIdClient', msg)
+    let tempMsgs = state.msgs[sessionId]
+    let lastMsgIndex = tempMsgs.length  - 1
+    if (tempMsgs.length === 0 || msg.time >= tempMsgs[lastMsgIndex].time) {
+      tempMsgs.push(msg)
+    } else {
+      for (let i = lastMsgIndex; i >= 0; i--) {
+        let currMsg = tempMsgs[i]
+        if (msg.time >= currMsg.time) {
+          state.msgs[sessionId].splice(i, 0, msg)
+          break
+        }
+      }
+    }
   },
+  // 删除消息列表消息
+  deleteMsg (state, msg) {
+    let sessionId = msg.sessionId
+    let tempMsgs = state.msgs[sessionId]
+    if (!tempMsgs || tempMsgs.length === 0) {
+      return
+    }
+    let lastMsgIndex = tempMsgs.length  - 1
+    for (let i = lastMsgIndex; i >= 0; i--) {
+      let currMsg = tempMsgs[i]
+      if (msg.idClient === currMsg.idClient) {
+        state.msgs[sessionId].splice(i, 1)
+        break
+      }
+    }
+  },
+  // 替换消息列表消息，如消息撤回
+  replaceMsg (state, obj) {
+    let {sessionId, idClient, msg} = obj
+    let tempMsgs = state.msgs[sessionId]
+    if (!tempMsgs || tempMsgs.length === 0) {
+      return
+    }
+    let lastMsgIndex = tempMsgs.length  - 1
+    for (let i = lastMsgIndex; i >= 0; i--) {
+      let currMsg = tempMsgs[i]
+      console.log(idClient, currMsg.idClient, currMsg.text)
+      if (idClient === currMsg.idClient) {
+        state.msgs[sessionId].splice(i, 1, msg)
+        break
+      }
+    }
+  },
+  // 用idClient 更新消息，目前用于消息撤回
+  updateMsgByIdClient (state, msgs) {
+    if (!Array.isArray(msgs)) {
+      msgs = [msgs]
+    }
+    let tempTime = (new Date()).getTime()
+    msgs.forEach(msg => {
+      // 有idClient 且 5分钟以内的消息
+      if (msg.idClient && (tempTime - msg.time < 1000 * 300)) {
+        state.msgsMap[msg.idClient] = msg
+      }
+    })
+  },
+  // 更新当前会话id，用于唯一判定是否在current session状态
   updateCurrSessionId (state, obj) {
     let type = obj.type || ''
     if (type === 'destroy') {
@@ -155,6 +216,7 @@ export default {
     }
   },
   // 更新当前会话列表的聊天记录，包括历史消息、单聊消息等，不包括聊天室消息
+  // replace: 替换idClient的消息
   updateCurrSessionMsgs (state, obj) {
     let type = obj.type || ''
     if (type === 'destroy') { // 清空会话消息
@@ -166,7 +228,7 @@ export default {
     } else if (type === 'init') { // 初始化会话消息列表
       if (state.currSessionId) {
         let sessionId = state.currSessionId
-        let currSessionMsgs = state.msgs[sessionId] || []
+        let currSessionMsgs = [].concat(state.msgs[sessionId] || [])
         // 做消息截断
         let limit = config.localMsglimit
         let msgLen = currSessionMsgs.length
@@ -228,9 +290,20 @@ export default {
       if (obj.msgs[0]) {
         state.currSessionLastMsg = obj.msgs[0]
       }
+    } else if (type === 'replace') {
+      let msgLen = state.currSessionMsgs.length
+      let lastMsgIndex = msgLen - 1
+      if (msgLen > 0) {
+        for (let i = lastMsgIndex; i >= 0; i--) {
+          if (state.currSessionMsgs[i].idClient === obj.idClient) {
+            state.currSessionMsgs.splice(i, 1, obj.msg)
+            break
+          }
+        }
+      }
     }
   },
-  updataSysMsgs (state, sysMsgs) {
+  updateSysMsgs (state, sysMsgs) {
     const nim = state.nim
     if (!Array.isArray(sysMsgs)) {
       sysMsgs = [sysMsgs]
@@ -242,10 +315,10 @@ export default {
     // state.sysMsgs = nim.mergeSysMsgs(state.sysMsgs, sysMsgs)
     state.sysMsgs = [].concat(nim.mergeSysMsgs(state.sysMsgs, sysMsgs))
   },
-  updataSysMsgUnread (state, obj) {
+  updateSysMsgUnread (state, obj) {
     state.sysMsgUnread = obj
   },
-  updataCustomSysMsgs (state, sysMsgs) {
+  updateCustomSysMsgs (state, sysMsgs) {
     const nim = state.nim
     if (!Array.isArray(sysMsgs)) {
       sysMsgs = [sysMsgs]
@@ -255,15 +328,35 @@ export default {
       return msg
     })
     // state.customSysMsgs = nim.mergeSysMsgs(state.customSysMsgs, sysMsgs)
-    state.customSysMsgs = [].concat(nim.mergeSysMsgs(state.customSysMsgs, sysMsgs))
+    state.customSysMsgs = state.customSysMsgs.concat(sysMsgs)
+    store.commit('updateCustomSysMsgUnread', {
+      type: 'add',
+      unread: sysMsgs.length
+    })
+  },
+  updateCustomSysMsgUnread (state, obj) {
+    let {type, unread} = obj
+    switch (type) {
+      case 'reset':
+        state.customSysMsgUnread = unread || 0
+        break
+      case 'add':
+        state.customSysMsgUnread += unread
+        break
+    }
   },
   resetSysMsgs (state, obj) {
     let type = obj.type
     switch (type) {
       case 0:
         state.sysMsgs = []
+        break
       case 1:
         state.customSysMsgs = []
+        store.commit('updateCustomSysMsgUnread', {
+          type: 'reset'
+        })
+        break
     }
   },
   setNoMoreHistoryMsgs (state) {
@@ -326,7 +419,9 @@ export default {
       state.currChatroomMembers = []
     } else if (type === 'put') {
       members.forEach(member => {
-        state.currChatroomMembers.push(member)
+        if (member.online) {
+          state.currChatroomMembers.push(member)
+        }
       })
     }
   }

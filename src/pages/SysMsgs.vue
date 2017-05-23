@@ -8,7 +8,7 @@
       <a slot="left"></a>
       <a slot="right" @click.stop="clearMsgs">清空</a>
     </x-header>
-    <div class="m-article-main">
+    <div class="m-article-main p-sysmsgs">
       <group class="u-list" v-if="sysType===0">
         <cell
           v-for="msg in sysMsgs"
@@ -39,9 +39,11 @@ export default {
   // 进入该页面，文档被挂载
   mounted () {
     this.$store.dispatch('markSysMsgRead')
+    this.$store.dispatch('markCustomSysMsgRead')
   },
   updated () {
     this.$store.dispatch('markSysMsgRead')
+    this.$store.dispatch('markCustomSysMsgRead')
   },
   data () {
     return {
@@ -53,18 +55,18 @@ export default {
       return this.$store.state.userInfos
     },
     sysMsgs () {
-      let sysMsgs = this.$store.state.sysMsgs.map(msg => {
+      let sysMsgs = this.$store.state.sysMsgs.filter(msg => {
         switch (msg.type) {
           case 'addFriend':
             msg.showText = `${msg.friend.alias || msg.friend.account} 添加您为好友~`
             msg.avatar = this.userInfos[msg.from].avatar
-            break
+            return true
           case 'deleteFriend':
             msg.showText = `${msg.from} 将您从好友中删除`
             msg.avatar = this.userInfos[msg.from].avatar
-            break
+            return false
         }
-        return msg
+        return false
       })
       return sysMsgs
     },
@@ -90,3 +92,17 @@ export default {
   }
 }
 </script>
+
+<style type="text/css">
+  .p-sysmsgs {
+    .u-list {
+      height: 100%;
+      overflow-y: scroll;
+    }
+    p {
+      word-wrap: normal;
+      word-break: break-all;
+      color: #333;
+    }
+  }
+</style>

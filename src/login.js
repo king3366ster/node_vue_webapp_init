@@ -16,9 +16,13 @@ import config from './configs'
 var formData = new Vue({
   el: '#form-data',
   data: {
+    logo: config.logo,
     account: '',
     password: '',
     errorMsg: ''
+  },
+  mounted () {
+    this.$el.style.display = ""
   },
   methods: {
     login () {
@@ -38,7 +42,7 @@ var formData = new Vue({
       let sdktoken = md5(this.password)
       cookie.setCookie('uid', this.account)
       cookie.setCookie('sdktoken', sdktoken)
-      location.href = config.appUrl
+      location.href = config.homeUrl
     },
     regist () {
       location.href = config.registUrl

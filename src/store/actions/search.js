@@ -11,7 +11,8 @@ export function resetSearchResult ({state, commit}) {
   })
 }
 
-export function searchUsers ({state, commit}, accounts) {
+export function searchUsers ({state, commit}, obj) {
+  let {accounts, done} = obj
   const nim = state.nim
   if (!Array.isArray(accounts)) {
     accounts = [accounts]
@@ -42,6 +43,9 @@ export function searchUsers ({state, commit}, accounts) {
         return formatUserInfo(item)
       })
       commit('updateUserInfo', updateUsers)
+      if (done instanceof Function) {
+        done(users)
+      }
     }
   })
 }

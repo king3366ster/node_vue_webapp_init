@@ -1,18 +1,16 @@
 <template>
   <div class="g-inherit m-main p-contacts">
-    <div class="m-cards">
-      <flexbox>
-        <flexbox-item class="u-search-box">
-          <a href="#/searchUser/0">
-            添加好友
-          </a>
-        </flexbox-item>
-        <flexbox-item class="u-search-box">
-          搜索高级群-待开发
-        </flexbox-item>
-      </flexbox>
+    <div class="m-cards u-search-box-wrap">
+      <span class="u-search-box">
+        <a href="#/searchUser/0">
+          添加好友
+        </a>
+      </span>
+      <span class="u-search-box">
+        搜索高级群-待开发
+      </span>
     </div>
-    <div class="m-list">
+    <div id="userList" class="m-list">
       <group class="u-card" title="群">
         <cell title="高级群-待开发">
           <span class="icon icon-team-advanced" slot="icon"></span>
@@ -43,7 +41,8 @@ export default {
       return this.$store.state.friendslist.filter(item => {
         let account = item.account
         let thisAttrs = this.userInfos[account]
-        item.alias = thisAttrs.alias || thisAttrs.nick || account
+        let alias = thisAttrs.alias ? thisAttrs.alias.trim() : ''
+        item.alias = alias || thisAttrs.nick || account
         item.link = `/namecard/${item.account}`
         if ((!thisAttrs.isFriend) || (thisAttrs.isBlack)) {
           return false
@@ -55,7 +54,8 @@ export default {
       return this.$store.state.blacklist.filter(item => {
         let account = item.account
         let thisAttrs = this.userInfos[account]
-        item.alias = thisAttrs.alias || thisAttrs.nick || account
+        let alias = thisAttrs.alias ? thisAttrs.alias.trim() : ''
+        item.alias = alias || thisAttrs.nick || account
         item.link = `/namecard/${item.account}`
         if (!thisAttrs.isFriend) {
           return false
@@ -77,17 +77,29 @@ export default {
       background-color: #fff;
     }
     .m-list {
-      padding-top: 8rem; 
+      padding-top: 8rem;
+    }
+    .u-search-box-wrap {
+      text-align: center;
     }
     .u-search-box {
       position: relative;
       display: inline-block;
+      box-sizing: border-box;
+      min-width: 45%;
       padding: 1em;
+      height: 3rem;
       text-align: center;
       border: 1px solid #ccc;
       background-color: #fff;
       font-size: 0.8rem;
       box-shadow: 2px 2px 6px #ccc;
+      a {
+        display: inline-block;
+        box-sizing: border-box;
+        height: 100%;
+        width: 100%;
+      }
     }
     .u-card {
       .icon {
@@ -99,11 +111,11 @@ export default {
       }
       .icon-team-advanced {
         background-position: 0 -3rem;
-        background-image: url(/res/im/icons.png);
+        background-image: url(http://yx-web.nos.netease.com/webdoc/h5/im/icons.png);
       }
       .icon-team {
         background-position: -2.1rem -3rem;
-        background-image: url(/res/im/icons.png);
+        background-image: url(http://yx-web.nos.netease.com/webdoc/h5/im/icons.png);
       }
     }
   }

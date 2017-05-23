@@ -10,7 +10,7 @@
     <div class="emoji-channel">
       <span class="emoji-album" :class="{active: item.name==currAlbum}" v-for="item in emoji" @click.stop="selectAlbum(item)">
         <img :src="item.album">
-      </span><span class="emoji-album" :class="{active: item.name==currAlbum}" v-for="item in pinup" @click.stop="selectAlbum(item)">
+      </span><span v-if="type==='session'" class="emoji-album" :class="{active: item.name==currAlbum}" v-for="item in pinup" @click.stop="selectAlbum(item)">
         <img :src="item.album">
       </span>
     </div>
@@ -88,6 +88,7 @@ export default {
             type: 'custom',
             scene: this.scene,
             to: this.to,
+            pushContent: '[贴图表情]',
             content: {
               type: 3,
               data: {
@@ -99,6 +100,7 @@ export default {
         } else if (this.type === 'chatroom') {
           this.$store.dispatch('sendChatroomMsg', {
             type: 'custom',
+            pushContent: '[贴图表情]',
             content: {
               type: 3,
               data: {

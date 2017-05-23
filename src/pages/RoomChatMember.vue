@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="p-room-chat-online">
     <group class="u-list">
       <cell
         v-for="(member, index) in chatroomMembers"
@@ -26,10 +26,10 @@ export default {
   computed: {
     chatroomMembers () {
       return this.$store.state.currChatroomMembers.map(member => {
-        if (member.avatar) {
-          member.avatar += '?imageView&thumbnail=40x40&quality=85'
-        } else {
+        if (!member.avatar) {
           member.avatar = config.defaultUserIcon
+        } else if (!/\?imageView/.test(member.avatar)) {
+          member.avatar += '?imageView&thumbnail=40x40&quality=85'
         }
         switch (member.type) {
           case 'owner':
@@ -55,3 +55,17 @@ export default {
   }
 }
 </script>
+
+<style type="text/css">
+  .p-room-chat-online {
+    position: relative;
+    display: block;
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    overflow-y: auto;
+  }
+</style>

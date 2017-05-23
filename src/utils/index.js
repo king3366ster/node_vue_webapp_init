@@ -70,7 +70,7 @@ Utils.mergeVueObject = function (dest, src) {
 }
 
 // 消息类型列表
-Utils.mapMsgType = function (type) {
+Utils.mapMsgType = function (msg) {
   let map = {
     text: '文本消息',
     image: '图片消息',
@@ -82,12 +82,13 @@ Utils.mapMsgType = function (type) {
     custom: '自定义消息',
     notification: '系统通知'
   }
-  type = type || ''
+  let type = msg.type
   return map[type] || '未知消息类型'
 }
 
 Utils.stringifyDate = function (datetime, simple = false) {
-  let weekMap = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+  // let weekMap = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+  let weekMap = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六']
   datetime = new Date(datetime)
   let year = datetime.getFullYear()
   let simpleYear = datetime.getYear() - 100
@@ -102,13 +103,13 @@ Utils.stringifyDate = function (datetime, simple = false) {
   let week = datetime.getDay()
   week = weekMap[week]
   let thatDay = (new Date(year, month - 1, day, 0, 0, 0)).getTime()
-  
+
   if (simple) {
     return {
       withYear: `${day}/${month}/${simpleYear}`,
       withMonth: `${month}-${day}`,
       withDay: `${week}`,
-      withLastDay: `Yesterday`,
+      withLastDay: `昨天`,
       withHour: `${hour}:${min}`,
       thatDay
     }
@@ -117,7 +118,7 @@ Utils.stringifyDate = function (datetime, simple = false) {
       withYear: `${year}-${month}-${day} ${hour}:${min}`,
       withMonth: `${month}-${day} ${hour}:${min}`,
       withDay: `${week} ${hour}:${min}`,
-      withLastDay: `Yesterday ${hour}:${min}`,
+      withLastDay: `昨天 ${hour}:${min}`,
       withHour: `${hour}:${min}`,
       thatDay
     }
@@ -158,6 +159,31 @@ Utils.parseSession = function (sessionId) {
   }
 }
 
+Utils.parseCustomMsg = function (msg) {
+  if (msg.type === 'custom') {
+    try {
+      let cnt = JSON.parse(msg.content)
+      switch (cnt.type) {
+        case 1:
+          return '[猜拳消息]'
+        case 2:
+          return '[阅后即焚]'
+        case 3:
+          return '[贴图表情]'
+        case 4:
+          return '[白板消息]'
+      }
+    } catch (e) {}
+    return '[自定义消息]'
+  }
+  return ''
+}
+/* 获得有效的备注名 */
+Utils.getFriendAlias = function (userInfo) {
+  userInfo.alias = userInfo.alias ? userInfo.alias.trim() : ''
+  return userInfo.alias || userInfo.nick || userInfo.account
+}
+
 Utils.generateChatroomSysMsg = function (data) {
   let text
   switch (data.attach.type) {
@@ -185,11 +211,17 @@ Utils.generateChatroomSysMsg = function (data) {
     case 'removeManager':
       text = `${(data.attach.toNick[0]||data.attach.to[0])}被解除管理员身份`
       break;
+    case 'addTempMute':
+      text = `${(data.attach.toNick[0]||data.attach.to[0])}被管理员临时禁言`
+      break;
+    case 'removeTempMute':
+      text = `${(data.attach.toNick[0]||data.attach.to[0])}被管理员解除临时禁言`
+      break;
     case 'addCommon':
-      text = 'addCommon'
+      text = `管理员添加普通成员`
       break
     case 'removeCommon':
-      text = 'removeCommon'
+      text = `管理员删除普通成员`
       break
     case 'kickMember':
       text = `${data.attach.toNick[0]}被管理员踢出房间`
@@ -201,7 +233,7 @@ Utils.generateChatroomSysMsg = function (data) {
       text = '通知消息'
       break
   }
-  return text  
+  return text
 }
 
 export default Utils

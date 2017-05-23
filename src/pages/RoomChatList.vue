@@ -1,5 +1,5 @@
 <template>
-  <div class="m-chat-main">
+  <div class="m-chat-main p-room-chat-list">
     <chat-list
       type="chatroom"
       :chatroomId="chatroomId"
@@ -45,10 +45,25 @@ export default {
     msglist () {
       let msgs = this.$store.state.currChatroomMsgs
       return msgs
-    },
+    }
+  },
+  methods: {
     msgsLoaded () {
       pageUtil.scrollChatListDown()
     }
-  },
+  }
 }
 </script>
+
+<style type="text/css">
+  .p-room-chat-list {
+    .m-chat-editor-main {
+      .u-editor-input {
+        padding-right: 8rem;
+      }
+      .u-editor-icons {
+        width: 8rem;
+      }
+    }
+  }
+</style>

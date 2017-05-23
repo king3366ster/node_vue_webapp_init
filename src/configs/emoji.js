@@ -1,7 +1,7 @@
 /* 表情原图配置文件 */
 import config from './index'
 
-let emojiBaseUrl = `${config.resourceUrl}/emoji`
+let emojiBaseUrl = `http://yx-web.nosdn.127.net/webdoc/h5/emoji`
 
 let emojiList = {
   "emoji": {

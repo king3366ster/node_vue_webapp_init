@@ -14,18 +14,17 @@
       </span>
       <span class="u-editor-icons">
         <span class="u-editor-icon" @click.stop="showEmoji">
-          <i class="u-icon icon-emoji"></i>
+          <i class="u-icon-img"><img :src="icon1"></i>
         </span>
-        <span class="u-editor-icon" @change="sendFileMsg">
+        <span v-if="type==='session'" class="u-editor-icon" @change="sendFileMsg">
+          <i class="u-icon-img"><img :src="icon2"></i>
           <input type="file" ref="fileToSent">
-          <i class="u-icon icon-image"></i>
         </span>
         <span class="u-editor-icon" @click.stop="sendPlayMsg">
-          <i class="u-icon-2 icon-play"></i>
+          <i class="u-icon-img"><img :src="icon3"></i>
         </span>
+        <span class="u-editor-send" @click="sendTextMsg">发 送</span>
       </span>
-      <br/>
-      <span class="u-editor-send" @click="sendTextMsg">发<br/>送</span>
     </div>
   </div>
 </template>
@@ -33,6 +32,7 @@
 <script>
 import ChatEmoji from './ChatEmoji'
 import util from '../../utils'
+import config from '../../configs'
 
 export default {
   components: {
@@ -51,16 +51,23 @@ export default {
   data () {
     return {
       isEmojiShown: false,
-      msgToSent: ''
+      msgToSent: '',
+      icon1: `${config.resourceUrl}/im/chat-editor-1.png`,
+      icon2: `${config.resourceUrl}/im/chat-editor-2.png`,
+      icon3: `${config.resourceUrl}/im/chat-editor-3.png`,
     }
   },
   methods: {
     sendTextMsg () {
       if (/^\s*$/.test(this.msgToSent)) {
-        alert('请不要刷屏')
+        this.$vux.alert.show({
+          title: '请不要刷屏'
+        })
         return
       } else if (this.msgToSent.length > 800) {
-        alert('请不要超过800个字')
+        this.$vux.alert.show({
+          title: '请不要超过800个字'
+        })
         return
       }
       if (this.type === 'session') {
@@ -85,6 +92,7 @@ export default {
           type: 'custom',
           scene: this.scene,
           to: this.to,
+          pushContent: '[猜拳]',
           content: {
             type: 1,
             data: {
@@ -95,6 +103,7 @@ export default {
       } else if (this.type === 'chatroom') {
         this.$store.dispatch('sendChatroomMsg', {
           type: 'custom',
+          pushContent: '[猜拳]',
           content: {
             type: 1,
             data: {
@@ -133,66 +142,3 @@ export default {
   }
 }
 </script>
-
-<style type="text/css">
-  .m-chat-editor-main {
-    position: relative;
-    display: flex;
-    box-sizing: border-box;
-    padding: 0.4rem;
-    height: 100%;
-    width: 100%;
-    text-align: center;
-    .u-editor-input, .u-editor-icon, .u-editor-send {
-      position: relative;
-      display: inline-block;
-      vertical-align: bottom;
-      width: 8%;
-    }
-    .u-editor-input {
-      width: 64%;
-      textarea {
-        display: flex;
-        box-sizing: border-box;
-        padding: 0.2rem;
-        font-size: 1rem;
-        width: 100%;
-        height: auto;
-        min-height: 3.2rem;
-        text-align: left;
-        border: 1px solid #ccc;
-        border-radius: 0.4rem;
-      }
-    }
-    .u-editor-icons {
-      position: relative;
-      width: 24%;
-      margin-left: 2%;
-      text-align: left;
-    }
-    .u-editor-icon {
-      position: relative;
-      width: 1.6rem;
-      height: 1.6rem;
-      margin-right: 2%;
-      input[type="file"] {
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: inherit;
-        height: inherit;
-        opacity: 0;
-      }
-    }
-    .u-editor-send {
-      width: 8%;
-      height: 3rem;
-      line-height: 1.5rem;
-      color: #fff;
-      padding: 0.2rem;
-      border-radius: 0.2rem;
-      background-color: #0091e4;
-      text-align: center;
-    }
-  }
-</style>

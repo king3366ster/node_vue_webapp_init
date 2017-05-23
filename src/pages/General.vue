@@ -1,5 +1,5 @@
 <template>
-  <div class="g-inherit m-main p-general">
+  <div class="g-inherit m-main p-general" v-if="myInfo.account">
     <group class="u-card">
       <cell :title="myInfo.nick" :inline-desc="'帐号: ' + myInfo.account">
         <img class="icon" slot="icon" width="20" :src="myInfo.avatar">
@@ -34,7 +34,13 @@ export default {
   },
   methods: {
     logout () {
-      this.$store.dispatch('logout')
+      let that = this
+      this.$vux.confirm.show({
+        title: '确定要注销帐号？',
+        onConfirm () {
+          that.$store.dispatch('logout')
+        }
+      })
     }
   }
 }

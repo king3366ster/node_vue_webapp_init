@@ -34,6 +34,7 @@
 </template>
 
 <script>
+import util from '../utils'
 
 export default {
   data () {
@@ -47,7 +48,7 @@ export default {
     },
     userInfo () {
       let info = this.$store.state.userInfos[this.account] || {}
-      info.alias = info.alias || info.nick || info.account
+      info.alias = util.getFriendAlias(info)
       this.isBlack = info.isBlack
       return info
     },
@@ -63,7 +64,7 @@ export default {
   methods: {
     changeBlack () {
       this.$store.dispatch('updateBlack', {
-        account: this.account, 
+        account: this.account,
         isBlack: this.isBlack
       })
     },
@@ -77,9 +78,13 @@ export default {
       this.$store.dispatch('addFriend', this.account)
     },
     deleteFriend () {
-      if (confirm('删除好友后，将同时解除双方的好友关系')) {
-        this.$store.dispatch('deleteFriend', this.account)
-      }
+      let that = this
+      this.$vux.confirm.show({
+        title: '删除好友后，将同时解除双方的好友关系',
+        onConfirm () {
+          that.$store.dispatch('deleteFriend', that.account)
+        }
+      })
     }
   }
 }

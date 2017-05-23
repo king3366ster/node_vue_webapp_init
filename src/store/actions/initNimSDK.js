@@ -34,7 +34,9 @@ export function initNimSDK ({ state, commit, dispatch }, loginInfo) {
       }
     },
     onerror: function onError (event) {
-      console.log(event)
+      // alert(JSON.stringify(event))
+      alert('网络连接状态异常')
+      location.href = config.loginUrl
     },
     onwillreconnect: function onWillReconnect () {
       console.log(event)

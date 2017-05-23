@@ -22,21 +22,80 @@ export function onMsg (msg) {
   }
 }
 
-function onFailedMsg (msg) {
-  msg.failed = true
-  onMsg(msg)
-}
-
 function onSendMsgDone (error, msg) {
   store.dispatch('hideLoading')
   if (error) {
-    alert(error)
-    onFailedMsg(msg)
-    return
+    // 被拉黑
+    if (error.code === 7101) {
+      msg.status = 'success'
+      alert(error.message)
+    } else {
+      alert(error.message)
+    }
   }
   onMsg(msg)
 }
 
+// 消息撤回
+export function onRevocateMsg (error, msg) {
+  const nim = store.state.nim
+  if (error) {
+    if (error.code === 508) {
+      alert('发送时间超过2分钟的消息，不能被撤回')
+    } else {
+      alert(error)
+    }
+    return
+  }
+  let tip = ''
+  if (msg.from === store.state.userUID) {
+    tip = '你撤回了一条消息'
+  } else {
+    let userInfo = store.state.userInfos[msg.from]
+    if (userInfo) {
+      tip = `${util.getFriendAlias(userInfo)}撤回了一条消息`
+    } else {
+      tip = '对方撤回了一条消息'
+    }
+  }
+  nim.sendTipMsg({
+    isLocal: true,
+    scene: msg.scene,
+    to: msg.to,
+    tip,
+    time: msg.time,
+    done: function sendTipMsgDone (error, tipMsg) {
+      let idClient = msg.deletedIdClient || msg.idClient
+      store.commit('replaceMsg', {
+        sessionId: msg.sessionId,
+        idClient,
+        msg: tipMsg
+      })
+      if (msg.sessionId === store.state.currSessionId) {
+        store.commit('updateCurrSessionMsgs', {
+          type: 'replace',
+          idClient,
+          msg: tipMsg
+        })
+      }
+    }
+  })
+}
+
+
+export function revocateMsg ({state, commit}, msg) {
+  const nim = state.nim
+  let {idClient} = msg
+  msg = Object.assign(msg, state.msgsMap[idClient])
+  nim.deleteMsg({
+    msg,
+    done: function deleteMsgDone (error) {
+      onRevocateMsg(error, msg)
+    }
+  })
+}
+
+// 发送普通消息
 export function sendMsg ({state, commit}, obj) {
   const nim = state.nim
   obj = obj || {}
@@ -55,12 +114,14 @@ export function sendMsg ({state, commit}, obj) {
       nim.sendCustomMsg({
         scene: obj.scene,
         to: obj.to,
+        pushContent: obj.pushContent,
         content: JSON.stringify(obj.content),
         done: onSendMsgDone
       })
   }
 }
 
+// 发送文件消息
 export function sendFileMsg ({state, commit}, obj) {
   const nim = state.nim
   let {scene, to, fileInput} = obj

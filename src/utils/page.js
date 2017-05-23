@@ -19,17 +19,24 @@ var page = {
       window.location.href = url
     }
   },
-  scrollChatListDown: function (pos) {
-    clearTimeout(scrollTimer)
-    scrollTimer = setTimeout(() => {
-      // 滚到页面最底端
-      let dom = document.getElementById('chat-list')
-      if (typeof pos === 'number') {
-        dom.scrollTop = pos
-      } else {
-        dom.scrollTop = Math.max(9999, dom.scrollHeight)
-      }
-    }, 0)
+  scrollChatListDown: function (pos, initCount) {
+    let dom = document.getElementById('chat-list')
+    if (!dom) {
+      return
+    }
+    let maxCount = 5
+    initCount = initCount || 1
+    if (typeof pos !== 'number') {
+      pos = Math.max(dom.scrollHeight - dom.clientHeight, 888888)
+    }
+    dom.scrollTop = pos
+    if ((dom.scrollTop < pos) && (initCount < maxCount)) {
+      clearTimeout(scrollTimer)
+      scrollTimer = setTimeout(() => {
+        initCount++
+        page.scrollChatListDown(pos, initCount)
+      }, 200)
+    }
   },
   getChatListHeight: function () {
     return document.getElementById('chat-list').scrollHeight

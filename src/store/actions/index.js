@@ -4,14 +4,15 @@ import cookie from '../../utils/cookie'
 import pageUtil from '../../utils/page'
 
 /* 导出actions方法 */
+import {showLoading, hideLoading, showFullscreenImg, hideFullscreenImg} from './widgetUi'
 import {initNimSDK} from './initNimSDK'
 import {initChatroomSDK, resetChatroomSDK} from './initChatroomSDK'
 import {updateBlack} from './blacks'
 import {updateFriend, addFriend, deleteFriend} from './friends'
 import {resetSearchResult, searchUsers} from './search'
 import {deleteSession, setCurrSession, resetCurrSession} from './session'
-import {sendMsg, sendFileMsg, sendMsgReceipt, getHistoryMsgs, resetNoMoreHistoryMsgs} from './msgs'
-import {markSysMsgRead, resetSysMsgs} from './sysMsgs'
+import {sendMsg, sendFileMsg, sendMsgReceipt, revocateMsg, getHistoryMsgs, resetNoMoreHistoryMsgs} from './msgs'
+import {markSysMsgRead, resetSysMsgs, markCustomSysMsgRead} from './sysMsgs'
 import {sendChatroomMsg, sendChatroomFileMsg, getChatroomHistoryMsgs} from './chatroomMsgs'
 import {initChatroomInfos, getChatroomInfo, getChatroomMembers, clearChatroomMembers} from './chatroomInfos'
 
@@ -42,8 +43,8 @@ function connectChatroom ({state, commit, dispatch}, obj) {
       chatroomId,
       done: function getChatroomAddressDone (error, obj) {
         if (error) {
-          alert(error)
-          dispatch('hideLoading')
+          alert(error.message)
+          location.href = '#/room'
           return
         }
         dispatch('initChatroomSDK', obj)
@@ -56,31 +57,11 @@ export default {
   updateRefreshState ({commit}) {
     commit('updateRefreshState')
   },
-  // 显示加载中进度条
-  showLoading ({state, commit}) {
-    commit('updateLoadingBar', {
-      process: 0
-    })
-  },
-  // 隐藏加载中进度条
-  hideLoading ({state, commit}) {
-    commit('updateLoadingBar', {
-      process: 100
-    })
-  },
-  // 显示原图片
-  showFullscreenImg ({state, commit}, obj) {
-    if (obj) {
-      obj.type = 'show'
-      commit('updateFullscreenImage', obj)
-    }
-  },
-  // 隐藏原图片
-  hideFullscreenImg ({state, commit}) {
-    commit('updateFullscreenImage', {
-      type: 'hide'
-    })
-  },
+
+  showLoading,
+  hideLoading,
+  showFullscreenImg,
+  hideFullscreenImg,
 
   // 连接sdk请求，false表示强制重连
   connect (store, obj) {
@@ -130,11 +111,14 @@ export default {
   sendFileMsg,
   // 发送消息已读回执
   sendMsgReceipt,
+  // 消息撤回
+  revocateMsg,
   getHistoryMsgs,
   // 重置历史消息状态
   resetNoMoreHistoryMsgs,
   // 标记系统消息已读
   markSysMsgRead,
+  markCustomSysMsgRead,
   resetSysMsgs,
 
   initChatroomSDK,

@@ -26,16 +26,28 @@ export function onUpdateFriend(error, friends) {
   if (!Array.isArray(friends)) {
     friends = [friends]
   }
+
   friends = friends.map(item => {
     if (typeof item.isFriend !== 'boolean') {
       item.isFriend = true
     }
     return item
   })
-  // 更新好友列表
-  store.commit('updateFriends', friends)
-  // 更新好友资料
-  store.commit('updateUserInfo', friends)
+
+  // 补充好友资料
+  store.dispatch('searchUsers', {
+    accounts: friends.map(item => {
+      return item.account
+    }),
+    done: (users) => {
+      const nim = store.state.nim
+      friends = nim.mergeFriends(friends, users)
+      // 更新好友列表
+      store.commit('updateFriends', friends)
+      // 更新好友资料
+      store.commit('updateUserInfo', friends)
+    }
+  })
 }
 
 // 删除好友，这里使用标记删除

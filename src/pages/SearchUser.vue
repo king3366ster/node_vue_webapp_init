@@ -41,6 +41,7 @@
 </template>
 
 <script>
+import config from '../configs'
 
 export default {
   mounted () {
@@ -83,6 +84,7 @@ export default {
         result = this.$store.state.searchedUsers.map(item => {
           item.nick = item.nick || item.account
           item.link = `/namecard/${item.account}`
+          item.avatar = item.avatar || config.defaultUserIcon
           return item
         })
       }
@@ -93,13 +95,17 @@ export default {
     searchUser () {
       this.firstEntry = false
       if (this.searchType === 1) {
-        alert('群功能DEMO待开发')
+        this.$vux.alert.show({
+          title: '群功能DEMO待开发'
+        })
       } else if (this.searchType === 0) {
         if (this.searchText === this.$store.state.userUID) {
           this.searchList = []
           this.errMsg = '别看了，就是你自己！'
         } else {
-          this.$store.dispatch('searchUsers', [this.searchText])
+          this.$store.dispatch('searchUsers', {
+            accounts: [this.searchText]
+          })
         }
       }
     }

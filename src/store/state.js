@@ -35,7 +35,8 @@ export default {
   // teamMembers: {},
 
   // 消息列表
-  msgs: {},
+  msgs: {}, // 以sessionId作为key
+  msgsMap: {}, // 以idClient作为key，诸如消息撤回等的消息查找
   // 会话列表
   sessionlist: [],
   sessionMap: {},
@@ -51,6 +52,7 @@ export default {
   sysMsgUnread: {
     total: 0
   },
+  customSysMsgUnread: 0,
 
   // 临时变量
   // 缓存需要获取的用户信息账号,如searchUser
@@ -61,11 +63,14 @@ export default {
   // 聊天室相关
   // 聊天室sdk实例
   chatroomInsts: {},
+  chatroomInfos: {},
+  // 聊天室分房间消息集合
+  chatroomMsgs: {},
   // 当前聊天室实例及id
   currChatroom: null,
   currChatroomId: null,
   currChatroomMsgs: [],
   currChatroomInfo: {},
+  // 聊天室成员列表
   currChatroomMembers: [],
-  chatroomMsgs: {}
 }

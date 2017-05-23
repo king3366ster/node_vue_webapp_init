@@ -5,15 +5,14 @@
     <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <title>WEB DEMO</title>
-    <link rel="stylesheet" href="/dist/css/theme.css">
-    <link rel="stylesheet" href="/dist/css/login.css">
+    <link rel="stylesheet" href="dist/css/theme.css">
   </head>
   <body>
     <div class="g-window">
       <div class="g-inherit m-album">
-        <div id="form-data" class="g-center m-login">
+        <div id="form-data" class="g-center m-login" style="display:none">
           <div class="cells">
-            <img class="logo" src="/res/im/logo.png">
+            <img class="logo" :src="logo">
           </div>
           <div class="cells">
             <div class="cell">
@@ -36,7 +35,7 @@
       </div>
     </div>
     <!-- 如果需要真机调试，可以修改此行 -->
-    <!-- <script src="http://192.168.1.104:2002/target/target-script-min.js#anonymous"></script> -->
-    <script src="/dist/js/login.js"></script>
+    <!-- // <script src="http://192.168.1.104:2002/target/target-script-min.js#anonymous"></script> -->
+    <script src="dist/js/login.js"></script>
   </body>
 </html>

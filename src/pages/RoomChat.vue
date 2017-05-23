@@ -62,7 +62,7 @@ export default {
       return chatroomId
     },
     chatroomInfo () {
-      return this.$store.state.chatroomInfos[this.chatroomId]
+      return this.$store.state.chatroomInfos[this.chatroomId] || {}
     }
   },
   methods: {

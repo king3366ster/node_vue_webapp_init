@@ -1,35 +1,58 @@
 import store from '../'
 import {onUpdateFriend, onDeleteFriend} from './friends'
+import {onRevocateMsg} from './msgs'
 
 export function onSysMsgs (sysMsgs) {
-  console.log(sysMsgs)
-  store.commit('updataSysMsgs', sysMsg)
+  store.commit('updateSysMsgs', sysMsgs)
 }
 
 export function onSysMsg (sysMsg) {
-  store.commit('updataSysMsgs', [sysMsg])
   switch (sysMsg.type) {
     // 在其他端添加或删除好友
     case 'addFriend':
       onUpdateFriend(null, {
         account: sysMsg.from
       })
+      store.commit('updateSysMsgs', [sysMsg])
       break
     case 'deleteFriend':
       onDeleteFriend(null, {
         account: sysMsg.from
       })
       break
+    // 对方消息撤回
+    case 'deleteMsg':
+      sysMsg.sessionId = `${sysMsg.scene}-${sysMsg.from}`
+      onRevocateMsg(null, sysMsg)
+      break
   }
 }
 
 export function onSysMsgUnread (obj) {
-  store.commit('updataSysMsgUnread', obj)
+  store.commit('updateSysMsgUnread', obj)
 }
 
 export function onCustomSysMsgs (customSysMsgs) {
-  console.log(customSysMsgs)
-  store.commit('updataCustomSysMsgs', customSysMsgs)
+  if (!Array.isArray(customSysMsgs)) {
+    customSysMsgs = [customSysMsgs]
+  }
+  customSysMsgs = customSysMsgs.filter(msg => {
+    if (msg.type === 'custom') {
+      if (msg.content) {
+        try {
+          let content = JSON.parse(msg.content)
+          // 消息正在输入中
+          if (content.id === 1) {
+            return false
+          }
+        } catch (e) {}
+      }
+    }
+    return true
+  })
+  if (customSysMsgs.length > 0) {
+    store.commit('updateCustomSysMsgs', customSysMsgs)
+  }
 }
 
 // 不传obj则全部重置
@@ -48,6 +71,12 @@ export function markSysMsgRead ({state, commit}, obj) {
       }
     })
   }
+}
+
+export function markCustomSysMsgRead ({state, commit}) {
+  commit('updateCustomSysMsgUnread', {
+    type: 'reset'
+  })
 }
 
 export function resetSysMsgs ({state, commit}, obj) {

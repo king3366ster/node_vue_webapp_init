@@ -12,7 +12,7 @@
 
 <script>
 import Vue from 'vue'
-import {Group, Cell, XHeader, XInput, XButton, XSwitch, Datetime, ViewBox, Search, ButtonTab, ButtonTabItem, Flexbox, FlexboxItem, Divider} from 'vux'
+import {Group, Cell, XHeader, XInput, XButton, XSwitch, Datetime, ViewBox, Search, ButtonTab, ButtonTabItem, Divider, AlertPlugin, ConfirmPlugin} from 'vux'
 import Loading from './pages/components/Loading'
 import FullscreenImg from './pages/components/FullscreenImg'
 
@@ -22,14 +22,15 @@ Vue.component('Cell', Cell)
 Vue.component('Datetime', Datetime)
 Vue.component('ButtonTab', ButtonTab)
 Vue.component('ButtonTabItem', ButtonTabItem)
-Vue.component('Flexbox', Flexbox)
-Vue.component('FlexboxItem', FlexboxItem)
 Vue.component('Divider', Divider)
 Vue.component('Search', Search)
 Vue.component('XInput', XInput)
 Vue.component('XButton', XButton)
 Vue.component('XHeader', XHeader)
 Vue.component('XSwitch', XSwitch)
+
+Vue.use(AlertPlugin)
+Vue.use(ConfirmPlugin)
 
 import NavBar from './pages/components/NavBar'
 import cookie from './utils/cookie'

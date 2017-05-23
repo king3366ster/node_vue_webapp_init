@@ -10,7 +10,7 @@
           <span>
             在线：{{chatroomInfo.onlineMemberNum}}
           </span>
-          <em>创建时间：{{chatroomInfo.showTime}}</em>
+          <!-- <em>创建时间：{{chatroomInfo.showTime}}</em> -->
         </p>
       </span>
     </div>
@@ -25,6 +25,7 @@
 
 <script>
 import util from '../utils'
+import config from '../configs'
 
 export default {
   mounted () {
@@ -41,7 +42,9 @@ export default {
     },
     chatroomActor () {
       if (this.chatroomInfo) {
-        return this.chatroomInfo.actor || {}
+        let actor = this.chatroomInfo.actor || {}
+        actor.avatar = actor.avatar || config.defaultUserIcon
+        return actor
       }
       return {}
     }

@@ -28,10 +28,14 @@ export function formatUserInfo (obj) {
       data: custom
     }
   }
+
   if (obj.avatar) {
     obj.avatar += '?imageView&thumbnail=40x40&quality=85'
+  } else {
+    obj.avatar = config.defaultUserIcon
   }
-  return Object.assign(obj, {
+
+  let result = Object.assign(obj, {
     account: obj.account,
     nick: obj.nick || '',
     avatar: obj.avatar || config.defaultUserIcon,
@@ -44,6 +48,8 @@ export function formatUserInfo (obj) {
     createTime: obj.createTime || (new Date()).getTime(),
     updateTime: obj.updateTime || (new Date()).getTime()
   })
+
+  return result
 }
 
 export function onMyInfo (obj) {

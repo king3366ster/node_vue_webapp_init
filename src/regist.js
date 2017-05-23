@@ -13,15 +13,18 @@ import cookie from './utils/cookie'
 
 import config from './configs'
 import util from './utils'
-import axios from 'axios'
 
 var formData = new Vue({
   el: '#form-data',
   data: {
+    logo: config.logo,
     account: '',
     password: '',
     nickname: '',
     errorMsg: ''
+  },
+  mounted () {
+    this.$el.style.display = ""
   },
   methods: {
     regist () {
@@ -48,31 +51,35 @@ var formData = new Vue({
       // 本demo做一次假登录
       // 真实场景应在此向服务器发起ajax请求
       let sdktoken = md5(this.password)
-      axios.post(
-        `${config.postUrl}/api/createDemoUser`,
-        util.object2query({
-          username: this.account,
-          password: sdktoken,
-          nickname: this.nickname
-        }),
-        {
-          headers: {
-            'appkey': config.appkey,
-            'content-type': 'application/x-www-form-urlencoded',
+
+      let xhr = new XMLHttpRequest()
+      xhr.open('POST', `${config.postUrl}/api/createDemoUser`, true)
+      xhr.setRequestHeader('content-type', 'application/x-www-form-urlencoded')
+      xhr.setRequestHeader('appkey', config.appkey)
+      xhr.send(util.object2query({
+        username: this.account,
+        password: sdktoken,
+        nickname: this.nickname
+      }))
+      xhr.onreadystatechange = () => {
+        if (xhr.readyState == 4) {
+          if (xhr.status == 200) {
+            let data = JSON.parse(xhr.responseText)
+            if (data.res === 200) {
+              cookie.setCookie('uid', this.account)
+              cookie.setCookie('sdktoken', sdktoken)
+              location.href = config.homeUrl
+            } else if (data.res === 414) {
+              this.errorMsg = data.errmsg
+            } else {
+              this.errorMsg = data.errmsg
+            }
+          } else {
+            this.errorMsg = '网络断开或其他未知错误'
           }
+          this.$forceUpdate()
         }
-      ).then(res => {
-        let data = res.data
-        if (data.res === 200) {
-          cookie.setCookie('uid', this.account)
-          cookie.setCookie('sdktoken', sdktoken)
-          location.href = config.appUrl
-        } else {
-          this.errorMsg = data.errmsg
-        }
-      }).catch(err => {
-        this.errorMsg = '网络断开或其他未知错误'
-      })
+      }
     },
     login () {
       location.href = config.loginUrl
