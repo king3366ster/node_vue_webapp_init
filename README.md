@@ -1,4 +1,29 @@
-# webapp demo html5 简介
+# WEB DEMO - alpha (HTML5-VUE版本) 源码导读
+
+## 介绍
+云信WEB DEMO HTML5-VUE版本 (以下简称h5 demo)，是一套使用[网易云信WEB端SDK](http://dev.netease.im/docs/product/IM即时通讯/SDK开发集成/Web开发集成)，以[VUE前端框架](https://cn.vuejs.org/v2/guide/)作为前端UI及缓存数据框架，进行开发的手机移动端适配DEMO。
+h5 demo的推出，使得云信SDK的开发者们可以更便捷的利用移动端渠道推广他们的即时通讯产品(如微信、手机微博、手机浏览器等)，或通过WebView嵌入到嵌入式设备中，作为混合APP进行发布。
+- h5 demo 体验地址：[体验地址](http://app.netease.im/webdemo/h5/index.html)
+- h5 demo 工程地址：[工程地址-未填写]()
+- ![demo示例](http://yx-web.nos.netease.com/webdoc/h5/docs/h5demo-example-1.jpg)
+
+## 起步
+为了给不同接入程度的开发者都能更好的利用后h5 demo进行移动端开发，云信 WEB DEMO HTML5版本的工程也做了一些考虑与设计，利用VUE及其配套框架，为开发者们设计了以下几种借鉴模式：
+
+1. 牛刀小试
+  - 使用该种模式，开发者只需要通过工程独立抽出的公共样式、配置文件、路由结构，就可以完成简单的换APPKEY、换界面皮肤、换LOGO等，轻轻松松将h5 demo转化成自己的应用
+  - 可参考教程[牛刀小试](./docs/h5-demo-guide-1.md)
+
+2. 登堂入室
+  - 使用该种模式，开发者需要深入阅读h5 demo的页面结构与样式组成，将其更换为自己所需的前端页面(包括路由规则、样式布局、增添组件等)，最好对webpack + postcss的工程化构建有一些了解，将h5 demo从视觉、交互层面转化为自己的应用
+  - 可参考教程[登堂入市](./docs/h5-demo-guide-2.md)
+
+3. 出神入化
+  - 使用该种模式，开发者还需要熟练掌握vue + vuex + vue-router + vux框架的实现原理及使用，最好还能熟悉一些常用的ES5/ES6相关的js标准，直接修改包括h5 demo的数据管理层、UI层、组件等等在内的示例代码，将h5 demo完全打造成自己的应用
+  - 可参考教程[出神入化](./docs/h5-demo-guide-3.md)
+
+4. 惊世骇俗
+  - 使用该种模式，h5 demo对于开发者而言仅仅是一个示例而已，开发者完全可以根据自己的喜好，使用熟悉的框架如Angular、React、Sencha Touch等等，甚至觉得示例代码写得不够优雅而用VUE进行重构，开发出最适合自己的IM产品。
 
 ## 工程初始化
 ### 开发环境部署
@@ -78,6 +103,49 @@ PostCSS，可以直观的理解为：它就是一个平台~ 通过这个平台�
 本demo中所使用的是sass作为通用样式预处理器
 - 可参考教程[postcss教程](https://github.com/postcss/postcss)
 - 可参考教程[sass教程](http://sass-lang.com/guide)
+
+## 工程结构概览
+### 主要目录结构
+h5 demo主要工程目录结构如下：
+``` shell
+  |- root
+    |- build 前端工程构建文件夹，诸如webpack、postcss的配置文件
+  |- dist 前端生成的资源文件
+    |- js 通过npm run dev/npm run prod 生成的目标js文件
+    |- css 通过npm run dev/npm run prod 生成的目标css文件
+    |- nim 从云信官网上下载的[web sdk](http://netease.im/im-sdk-demo)
+  |- res 图片资源文件(目前nos的资源全在网易的cdn服务器上，这里是给开发者的一个备份示例)
+  |- src h5 demo 开发工程
+    |- configs demo基本配置，可参考教程[牛刀小试](./docs/h5-demo-guide-1.md)
+    |- pages demo具体页面UI逻辑，可参考教程[登堂入市](./docs/h5-demo-guide-2.md)
+      |- components demo UI组件，如聊天控件、表情控件等
+    |- plugins 适配于vue的插件
+    |- router 前端路由
+    |- store h5 demo数据驱动的管理中心，可参考教程[出神入化](./docs/h5-demo-guide-3.md)
+      |- index.js vuex数据中心入口
+      |- state.js 数据中心变量声明
+      |- actions 异步数据变更请求提交
+      |- mutations 同步操作数据变更
+    |- themes h5 demo的主要公共UI样式库，可参考教程[牛刀小试](./docs/h5-demo-guide-1.md)
+    |- utils 工具函数
+  |- login.html 登录页面
+  |- regist.html 注册页面
+  |- index.html 主页面
+  |- server.js 开发环境后端服务脚本
+```
+
+### 进入开发
+#### 牛刀小试
+该部分主要向开发者介绍h5 demo的主要配置项、样式构成、路由结构，使得开发者只要通过修改配置、样式、图片等方式，即生成自己的demo，而无需更改代码底层。
+- [牛刀小试](./docs/h5-demo-guide-1.md)
+
+#### 登堂入市
+该部分主要向开发者介绍h5 demo的主要页面结构和主要数据层交互，使得开发者可以高度定制h5 demo的UI及交互。
+- [登堂入市](./docs/h5-demo-guide-2.md)
+
+#### 出神入化
+该部分主要向开发者介绍h5 demo的数据结构及数据驱动层，使得开发者可以依据[web sdk](http://dev.netease.im/docs/product/IM即时通讯/SDK开发集成/Web开发集成)，深度订制自己崭新的业务功能。
+- [出神入化](./docs/h5-demo-guide-3.md)
 
 ## 移动端 html5 开发小技巧
 ### fixed样式问题

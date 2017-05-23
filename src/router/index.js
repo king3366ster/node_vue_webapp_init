@@ -12,23 +12,6 @@ const routes = [
       name: 'session'
     }
   },
-  // 登录页面
-  { 
-    path: '/login', 
-    name: 'login',
-    // 当切换到特定路由时才加载代码，结合webpack code splitting
-    component (resolve) {
-      require(['../pages/Login'], resolve)
-    }
-  },
-  // 注册页面
-  { 
-    path: '/regist', 
-    name: 'regist',
-    component (resolve) {
-      require(['../pages/Regist'], resolve)
-    }
-  },
   // 最近消息列表（会话）
   {
     path: '/session',
@@ -63,10 +46,18 @@ const routes = [
   },
   // 直播间
   {
-    path: '/live',
-    name: 'live',
+    path: '/room',
+    name: 'room',
     component (resolve) {
-      require(['../pages/Live'], resolve)
+      require(['../pages/Room'], resolve)
+    }
+  },
+  // 直播聊天页
+  {
+    path: '/roomChat/:chatroomId',
+    name: 'roomChat',
+    component (resolve) {
+      require(['../pages/RoomChat'], resolve)
     }
   },
   // 通讯录
@@ -98,7 +89,7 @@ const routes = [
     path: '/searchuser/:searchType',
     name: 'searchuser',
     component (resolve) {
-      require(['../pages/searchUser'], resolve)
+      require(['../pages/SearchUser'], resolve)
     }
   },
   // 通用页面

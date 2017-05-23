@@ -1,34 +1,32 @@
 <template>
-  <div class="g-inherit m-main">
-    <div class="m-cards">
-      <flexbox>
-        <flexbox-item class="u-search-box">
-          <a href="#/searchUser/0">
-            添加好友
-          </a>
-        </flexbox-item>
-        <flexbox-item class="u-search-box">
-          <a href="#/searchUser/1">
-            搜索高级群
-          </a>
-        </flexbox-item>
-      </flexbox>
+  <div class="g-inherit m-main p-contacts">
+    <div class="m-cards u-search-box-wrap">
+      <span class="u-search-box">
+        <a href="#/searchUser/0">
+          添加好友
+        </a>
+      </span>
+      <span class="u-search-box">
+        搜索高级群-待开发
+      </span>
     </div>
-    <div class="m-list">
+    <div id="userList" class="m-list">
       <group class="u-card" title="群">
-        <cell title="高级群" link="/chat/2" is-link>
+        <cell title="高级群-待开发">
           <span class="icon icon-team-advanced" slot="icon"></span>
         </cell>
-        <cell title="讨论组" link="/chat/3" is-link>
+        <cell title="讨论组-待开发">
           <span class="icon icon-team" slot="icon"></span>
         </cell>
       </group>
-      <group class="u-card" title="好友">
-        <cell title="WWW" is-link link="/namecard/2">
-          <img class="icon" slot="icon" width="20" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAC4AAAAuCAMAAABgZ9sFAAAAVFBMVEXx8fHMzMzr6+vn5+fv7+/t7e3d3d2+vr7W1tbHx8eysrKdnZ3p6enk5OTR0dG7u7u3t7ejo6PY2Njh4eHf39/T09PExMSvr6+goKCqqqqnp6e4uLgcLY/OAAAAnklEQVRIx+3RSRLDIAxE0QYhAbGZPNu5/z0zrXHiqiz5W72FqhqtVuuXAl3iOV7iPV/iSsAqZa9BS7YOmMXnNNX4TWGxRMn3R6SxRNgy0bzXOW8EBO8SAClsPdB3psqlvG+Lw7ONXg/pTld52BjgSSkA3PV2OOemjIDcZQWgVvONw60q7sIpR38EnHPSMDQ4MjDjLPozhAkGrVbr/z0ANjAF4AcbXmYAAAAASUVORK5CYII=">
+      <group class="u-card" title="好友列表">
+        <cell v-for="friend in friendslist" :title="friend.alias" :key="friend.account" is-link :link="friend.link">
+          <img class="icon" slot="icon" width="20" :src="userInfos[friend.account].avatar">
         </cell>
-        <cell title="XXX" is-link link="/namecard/3">
-          <img class="icon" slot="icon" width="20" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAC4AAAAuCAMAAABgZ9sFAAAAVFBMVEXx8fHMzMzr6+vn5+fv7+/t7e3d3d2+vr7W1tbHx8eysrKdnZ3p6enk5OTR0dG7u7u3t7ejo6PY2Njh4eHf39/T09PExMSvr6+goKCqqqqnp6e4uLgcLY/OAAAAnklEQVRIx+3RSRLDIAxE0QYhAbGZPNu5/z0zrXHiqiz5W72FqhqtVuuXAl3iOV7iPV/iSsAqZa9BS7YOmMXnNNX4TWGxRMn3R6SxRNgy0bzXOW8EBO8SAClsPdB3psqlvG+Lw7ONXg/pTld52BjgSSkA3PV2OOemjIDcZQWgVvONw60q7sIpR38EnHPSMDQ4MjDjLPozhAkGrVbr/z0ANjAF4AcbXmYAAAAASUVORK5CYII=">
+      </group>
+      <group class="u-card" title="黑名单">
+        <cell v-for="friend in blacklist" :title="friend.alias" :key="friend.account" is-link :link="friend.link">
+          <img class="icon" slot="icon" width="20" :src="userInfos[friend.account].avatar">
         </cell>
       </group>
     </div>
@@ -38,42 +36,87 @@
 <script>
 
 export default {
-  data () {
-    return {
-      msg: 'Info'
+  computed: {
+    friendslist () {
+      return this.$store.state.friendslist.filter(item => {
+        let account = item.account
+        let thisAttrs = this.userInfos[account]
+        let alias = thisAttrs.alias ? thisAttrs.alias.trim() : ''
+        item.alias = alias || thisAttrs.nick || account
+        item.link = `/namecard/${item.account}`
+        if ((!thisAttrs.isFriend) || (thisAttrs.isBlack)) {
+          return false
+        }
+        return true
+      })
+    },
+    blacklist () {
+      return this.$store.state.blacklist.filter(item => {
+        let account = item.account
+        let thisAttrs = this.userInfos[account]
+        let alias = thisAttrs.alias ? thisAttrs.alias.trim() : ''
+        item.alias = alias || thisAttrs.nick || account
+        item.link = `/namecard/${item.account}`
+        if (!thisAttrs.isFriend) {
+          return false
+        }
+        return true
+      })
+    },
+    userInfos () {
+      return this.$store.state.userInfos
     }
   }
 }
+
 </script>
 
 <style type="text/css">
-  .m-main {
+  .p-contacts {
+    .add-friend {
+      background-color: #fff;
+    }
     .m-list {
-      padding-top: 8rem; 
+      padding-top: 8rem;
     }
-  }
-  .u-search-box {
-    position: relative;
-    display: inline-block;
-    padding: 1em;
-    text-align: center;
-    border: 1px solid #ccc;
-    background-color: #fff;
-  }
-  .u-card {
-    .icon {
+    .u-search-box-wrap {
+      text-align: center;
+    }
+    .u-search-box {
+      position: relative;
       display: inline-block;
-      margin-right: 0.4rem;
-      width: 1.2rem;
-      height: 1.2rem;
-      background-size: 20rem;
-      background-image: url(/res/im/icons.png);
+      box-sizing: border-box;
+      min-width: 45%;
+      padding: 1em;
+      height: 3rem;
+      text-align: center;
+      border: 1px solid #ccc;
+      background-color: #fff;
+      font-size: 0.8rem;
+      box-shadow: 2px 2px 6px #ccc;
+      a {
+        display: inline-block;
+        box-sizing: border-box;
+        height: 100%;
+        width: 100%;
+      }
     }
-    .icon-team-advanced {
-      background-position: 0 -3rem;
-    }
-    .icon-team {
-      background-position: -2.1rem -3rem;
+    .u-card {
+      .icon {
+        display: inline-block;
+        margin-right: 0.4rem;
+        width: 1.4rem;
+        height: 1.4rem;
+        background-size: 20rem;
+      }
+      .icon-team-advanced {
+        background-position: 0 -3rem;
+        background-image: url(http://yx-web.nos.netease.com/webdoc/h5/im/icons.png);
+      }
+      .icon-team {
+        background-position: -2.1rem -3rem;
+        background-image: url(http://yx-web.nos.netease.com/webdoc/h5/im/icons.png);
+      }
     }
   }
 </style>

@@ -10,19 +10,20 @@ function resolve (dir) {
 }
 
 let webpackConfig = {
-  devtool: 'source-map',
-  // devtool: 'cheap-source-map',
+
   context: projectRoot,
   //页面入口文件配置
   entry: {
-    app: './src/main.js'
+    main: './src/main.js',
+    login: './src/login.js',
+    regist: './src/regist.js'
   },
   //入口文件输出配置
   output: {
     filename: '[name].js',
     path: path.join(projectRoot, 'dist/js'),
     // Code Splitting 用于页面按需懒加载
-    publicPath: '/dist/js/',
+    publicPath: 'dist/js/',
     pathinfo: true
   },
   resolve: {
@@ -89,25 +90,33 @@ let webpackConfig = {
     ]
   },
   plugins: [
-    // new webpack.optimize.UglifyJsPlugin({
-    //   compress: {
-    //       warnings: false
-    //   },
-    //   output: {
-    //       comments: false
-    //   }
-    // })
+    // 全局挂载插件
+    new webpack.ProvidePlugin({})
   ]
+}
+
+// 生成环境要压缩
+if (process.env.NODE_ENV === 'production') {
+  webpackConfig.plugins.push(
+    // 压缩JS
+    new webpack.optimize.UglifyJsPlugin({
+      compress: {
+        warnings: false
+      },
+      output: {
+        comments: false
+      }
+    })
+  )
+} else {
+  webpackConfig.devtool = 'source-map'
+  // webpackConfig.devtool = 'cheap-source-map',
 }
 
 // vux configs
 webpackConfig = vuxLoader.merge(webpackConfig, {
   plugins: [
     'vux-ui',
-    // {
-    //   name: 'less-theme',
-    //   path: 'src/themes/theme.less'
-    // },
     'progress-bar',
     'duplicate-style'
   ]
