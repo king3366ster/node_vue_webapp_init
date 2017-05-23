@@ -1,6 +1,6 @@
 # WEB DEMO - alpha (HTML5-VUE版本) 源码导读 - 出神入化
 ## 概述
-该部分主要向开发者介绍h5 demo的数据结构及数据驱动层，使得开发者可以依据[web sdk](http://dev.netease.im/docs/product/IM即时通讯/SDK开发集成/Web开发集成)，深度订制自己崭新的业务功能。如果开发者在阅读本章时有一些配置上的困难，可以回过头去阅读[登堂入市](./docs/h5-demo-guide-2.md)
+该部分主要向开发者介绍h5 demo的数据结构及数据驱动层，使得开发者可以依据[web sdk](http://dev.netease.im/docs/product/IM即时通讯/SDK开发集成/Web开发集成)，深度订制自己崭新的业务功能。如果开发者在阅读本章时有一些配置上的困难，可以回过头去阅读[登堂入市](./h5-demo-guide-2.md)
 
 ## vuex相关
 本h5 demo的中央数据管理使用vuex，请优先阅读[vuex开始](http://vuex.vuejs.org/zh-cn/getting-started.html)。它并不复杂，仅仅是一个缓存中的数据仓库而已，可以通过他管理全局数据。
