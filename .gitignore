@@ -1,7 +1,5 @@
 # Dependency directories
 node_modules
-dist/js
-dist/css
 *.sublime*
 *.log*
 *.lock
